@@ -1,6 +1,8 @@
 package models
 
 import (
+	"os"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -8,13 +10,14 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
-	database, err := gorm.Open(mysql.Open("root:@tcp(localhost:3306)/go_restapi_gin"))
+	dsn := os.Getenv("DB")
+	database, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil{
 		panic(err)
 	}
 
-	database.AutoMigrate(&Product{}, &Review{})
+	database.AutoMigrate(&Product{}, &Review{}, &User{})
 
 	DB = database
 }
